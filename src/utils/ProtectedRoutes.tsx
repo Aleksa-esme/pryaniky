@@ -1,10 +1,10 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { RouterPaths } from '../App';
+import { RouterPaths } from 'App';
+import { useAppSelector } from 'hooks';
 
 const useAuth = () => {
-  // потом брать из стора
-  const user = { loggedIn: false };
-  return user && user.loggedIn;
+  const { loggedIn } = useAppSelector(state => state.appData);
+  return loggedIn;
 };
 
 export const ProtectedRoutes = () => {

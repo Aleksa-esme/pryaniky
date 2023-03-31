@@ -4,7 +4,7 @@ import { Box, Typography } from '@mui/material';
 export const Footer: FC = () => {
   return (
     <Box
-      component="footer"
+      component='footer'
       sx={{
         py: 3,
         mt: 'auto',

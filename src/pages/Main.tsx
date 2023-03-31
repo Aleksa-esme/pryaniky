@@ -1,9 +1,8 @@
 import { FC } from 'react';
-import { Container, CssBaseline, Box } from '@mui/material';
+import { CssBaseline, Box } from '@mui/material';
 import { Table, Header, Footer } from 'components';
 
 export const Main: FC = () => {
-
   return (
     <Box 
       sx={{
@@ -14,9 +13,7 @@ export const Main: FC = () => {
     >
       <CssBaseline />
       <Header />
-      <Container component="main" maxWidth='lg'>
-        <Table />
-      </Container>
+      <Table />
       <Footer />
     </Box>
   );

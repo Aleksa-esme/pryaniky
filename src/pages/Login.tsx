@@ -1,4 +1,8 @@
-import { FC, FormEvent, useState } from 'react';
+import { FC, FormEvent, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from 'hooks';
+import { login } from 'controllers/userController';
+import { RouterPaths } from 'App';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -16,10 +20,14 @@ import {
 } from '@mui/material';
 
 export const Login: FC = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const HOST = 'https://test.v5.pryaniky.com';
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const { loggedIn } = useAppSelector(state => state.appData);
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     
     const data = new FormData(event.currentTarget);
@@ -30,32 +38,15 @@ export const Login: FC = () => {
     };
     
     console.log(user);
-
-    const response = await fetch(`${HOST}/ru/data/v3/testmethods/docs/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json;charset=utf-8',
-      },
-      body: JSON.stringify(user)
-    })
-
-    let result = await response.json();
-    console.log(result);
-  };
-
-  const getData = async () => {
-    const response = await fetch(`${HOST}/ru/data/v3/testmethods/docs/userdocs/get`, {
-      headers: {
-        'x-auth': 'supersecrettoken_for_user17'
-      },
-    });
-
-    let result = await response.json();
-    console.log(result);
+    dispatch(login(user));
   }
 
+  useEffect(() => {
+    if(loggedIn) navigate(RouterPaths.MAIN);
+  }, [loggedIn, navigate]);
+
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component='main' maxWidth='xs'>
       <CssBaseline />
       <Box
         sx={{
@@ -68,29 +59,29 @@ export const Login: FC = () => {
         <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
           <LockOutlinedIcon />
         </Avatar>
-        <Typography component="h1" variant="h5">
+        <Typography component='h1' variant='h5'>
           Sign in
         </Typography>
-        <Box component="form" sx={{ mt: 1 }} onSubmit={handleSubmit}>
-          <InputLabel htmlFor="login">Username</InputLabel>
+        <Box component='form' sx={{ mt: 1 }} onSubmit={handleSubmit}>
+          <InputLabel htmlFor='login'>Username</InputLabel>
           <OutlinedInput
-            id="login"
+            id='login'
             type='text'
             required
             fullWidth
-            name="login"
+            name='login'
           />
-          <InputLabel sx={{ mt: 1 }} htmlFor="password">Password</InputLabel>
+          <InputLabel sx={{ mt: 1 }} htmlFor='password'>Password</InputLabel>
           <OutlinedInput
-            id="password"
+            id='password'
             type={showPassword ? 'text' : 'password'}
             required
             fullWidth
-            name="password"
+            name='password'
             endAdornment={
-              <InputAdornment position="end">
+              <InputAdornment position='end'>
                 <IconButton
-                  aria-label="toggle password visibility"
+                  aria-label='toggle password visibility'
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? <VisibilityOff /> : <Visibility />}
@@ -99,9 +90,9 @@ export const Login: FC = () => {
             }
           />
           <Button
-            type="submit"
+            type='submit'
             fullWidth
-            variant="contained"
+            variant='contained'
             sx={{ mt: 3 }}
             size='large'
           >
@@ -109,7 +100,6 @@ export const Login: FC = () => {
           </Button>
         </Box>
       </Box>
-      <button onClick={getData}>данные</button>
     </Container>
   );
 };

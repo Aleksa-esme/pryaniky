@@ -2,11 +2,10 @@ import { FC } from 'react';
 import { AppBar, Toolbar, Typography, Avatar } from '@mui/material';
 
 export const Header: FC = () => {
-
   return (
-    <AppBar position="relative">
+    <AppBar position='relative'>
       <Toolbar>
-        <Typography variant="h5">
+        <Typography variant='h5'>
           Pryaniky
         </Typography>
         {/* <div>
