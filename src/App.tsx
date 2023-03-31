@@ -1,13 +1,12 @@
-import { Login } from 'pages/Login';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Login, Main } from 'pages';
+import { createTheme, ThemeProvider } from '@mui/material';
 import './App.css';
 
-const theme = createTheme();
-
 function App() {
+  const theme = createTheme();
   return (
     <ThemeProvider theme={theme}>
-      <Login />
+      <Main />
     </ThemeProvider>
   );
 }

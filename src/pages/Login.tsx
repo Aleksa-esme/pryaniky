@@ -17,17 +17,42 @@ import {
 
 export const Login: FC = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const HOST = 'https://test.v5.pryaniky.com';
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     
     const data = new FormData(event.currentTarget);
-    
-    console.log({
+
+    const user = {
       login: data.get('login'),
       password: data.get('password'),
-    });
+    };
+    
+    console.log(user);
+
+    const response = await fetch(`${HOST}/ru/data/v3/testmethods/docs/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+      },
+      body: JSON.stringify(user)
+    })
+
+    let result = await response.json();
+    console.log(result);
   };
+
+  const getData = async () => {
+    const response = await fetch(`${HOST}/ru/data/v3/testmethods/docs/userdocs/get`, {
+      headers: {
+        'x-auth': 'supersecrettoken_for_user17'
+      },
+    });
+
+    let result = await response.json();
+    console.log(result);
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -84,6 +109,7 @@ export const Login: FC = () => {
           </Button>
         </Box>
       </Box>
+      <button onClick={getData}>данные</button>
     </Container>
   );
 };
