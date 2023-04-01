@@ -30,15 +30,14 @@ export const Login: FC = () => {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     
-    const data = new FormData(event.currentTarget);
+    const formData = new FormData(event.currentTarget);
 
-    const user = {
-      login: data.get('login'),
-      password: data.get('password'),
+    const data = {
+      login: formData.get('login'),
+      password: formData.get('password'),
     };
     
-    console.log(user);
-    dispatch(login(user));
+    dispatch(login(data));
   }
 
   useEffect(() => {

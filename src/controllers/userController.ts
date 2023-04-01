@@ -17,8 +17,5 @@ export const login = (data:any) => async (dispatch: AppDispatch) => {
     throw new Error(response.reason);
   }
 
-  let result = await response.json();
-  console.log(result);
-
   dispatch(setUser(true));
 };

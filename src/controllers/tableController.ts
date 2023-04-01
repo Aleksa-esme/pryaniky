@@ -1,10 +1,10 @@
-import { setData } from 'store/reducers/appSlice';
+import { setData, setLoading } from 'store/reducers/appSlice';
 import { AppDispatch } from 'store/store';
-import { hasApiError, formatDate } from 'utils';
+import { hasApiError } from 'utils';
 
 const HOST = 'https://test.v5.pryaniky.com';
 
-type TableData = {
+type TableResData = {
   id: string, 
   companySigDate: string, 
   companySignatureName: string, 
@@ -15,8 +15,20 @@ type TableData = {
   employeeSigDate: string, 
   employeeSignatureName: string,
 }
+type TableReqData = {
+  companySigDate: Date, 
+  companySignatureName: FormDataEntryValue, 
+  documentName: FormDataEntryValue,
+  documentStatus: FormDataEntryValue, 
+  documentType: FormDataEntryValue, 
+  employeeNumber: FormDataEntryValue, 
+  employeeSigDate: Date, 
+  employeeSignatureName: FormDataEntryValue,
+}
 
 export const getData = () => async (dispatch: AppDispatch) => {
+  dispatch(setLoading(true));
+  
   const response = await fetch(`${HOST}/ru/data/v3/testmethods/docs/userdocs/get`, {
     headers: {
       'x-auth': 'supersecrettoken_for_user17'
@@ -28,22 +40,58 @@ export const getData = () => async (dispatch: AppDispatch) => {
   }
 
   let result = await response.json();
-  console.log(result);
-  console.log(result.data);
 
-  const arr = result.data.map((el: TableData) => {
-    return {
-      id: el.id, 
-      companySigDate: formatDate(el.companySigDate), 
-      companySignatureName: el.companySignatureName, 
-      documentName: el.documentName,
-      documentStatus: el.documentStatus, 
-      documentType: el.documentType, 
-      employeeNumber: el.employeeNumber, 
-      employeeSigDate: formatDate(el.employeeSigDate), 
-      employeeSignatureName: el.employeeSignatureName,
-    }
-  })
+  dispatch(setData(result.data));
+  dispatch(setLoading(false));
+};
 
-  dispatch(setData(arr));
+export const sendData = (data: any) => async (dispatch: AppDispatch) => {
+  const response = await fetch(`${HOST}/ru/data/v3/testmethods/docs/userdocs/create`, {
+    method: 'POST',
+    headers: {
+      'x-auth': 'supersecrettoken_for_user17',
+      'Content-Type': 'application/json;charset=utf-8',
+    },
+    body: JSON.stringify(data)
+  });
+
+  if (hasApiError(response)) {
+    throw new Error(response.reason);
+  }
+
+  dispatch(getData());
+};
+
+export const deleteData = (id: number) => async (dispatch: AppDispatch) => {
+  const response = await fetch(`${HOST}/ru/data/v3/testmethods/docs/userdocs/delete/${id}`, {
+    method: 'POST',
+    headers: {
+      'x-auth': 'supersecrettoken_for_user17',
+      'Content-Type': 'application/json;charset=utf-8',
+    },
+    body: JSON.stringify(id)
+  });
+
+  if (hasApiError(response)) {
+    throw new Error(response.reason);
+  }
+
+  dispatch(getData());
+};
+
+export const editData = (id: string, data: any) => async (dispatch: AppDispatch) => {
+  const response = await fetch(`${HOST}/ru/data/v3/testmethods/docs/userdocs/set/${id}`, {
+    method: 'POST',
+    headers: {
+      'x-auth': 'supersecrettoken_for_user17',
+      'Content-Type': 'application/json;charset=utf-8',
+    },
+    body: JSON.stringify(data)
+  });
+
+  if (hasApiError(response)) {
+    throw new Error(response.reason);
+  }
+
+  dispatch(getData());
 };
