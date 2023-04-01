@@ -4,6 +4,7 @@ import { DataGrid, GridCallbackDetails, GridCellParams, GridColDef, MuiEvent } f
 import { useAppDispatch, useAppSelector } from 'hooks';
 import { getData, editData } from 'controllers/tableController';
 import { Modal } from 'components';
+import { ErrorBoundary } from 'utils';
 
 export type Data = {
   id: string;
@@ -80,24 +81,28 @@ export const Table: FC = () => {
   
   return (
     <div style={{ height: '74vh', margin: '40px 40px 20px' }}>
-      <DataGrid
-        rows={tableData}
-        columns={columns}
-        // checkboxSelection
-        autoPageSize
-        onCellDoubleClick={onEdit}
-        loading={loading}
-        // getRowId={(row) => {console.log(row.id); return row.id}}
-        // isCellEditable={(params: GridCellParams) => {/*console.log('params',params);*/ return true}}
-        // isRowSelectable={(params: GridRowParams) => {console.log('params',params); return true}}
-      />
-      <Modal 
-        open={open} 
-        onClose={handleClose} 
-        onSubmit={handleSend} 
-        title='Change data in the row' 
-        data={row} 
-      />
+      <ErrorBoundary>
+        <DataGrid
+          rows={tableData}
+          columns={columns}
+          // checkboxSelection
+          autoPageSize
+          onCellDoubleClick={onEdit}
+          loading={loading}
+          // getRowId={(row) => {console.log(row.id); return row.id}}
+          // isCellEditable={(params: GridCellParams) => {/*console.log('params',params);*/ return true}}
+          // isRowSelectable={(params: GridRowParams) => {console.log('params',params); return true}}
+        />
+      </ErrorBoundary>
+      <ErrorBoundary>
+        <Modal 
+          open={open} 
+          onClose={handleClose} 
+          onSubmit={handleSend} 
+          title='Change data in the row' 
+          data={row} 
+        />
+      </ErrorBoundary>
     </div>
   );
 };
