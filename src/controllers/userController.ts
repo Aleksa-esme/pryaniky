@@ -4,7 +4,12 @@ import { hasApiError } from 'utils/hasApiError';
 
 const HOST = 'https://test.v5.pryaniky.com';
 
-export const login = (data:any) => async (dispatch: AppDispatch) => {
+type AuthRequest = {
+  login: string;
+  password: string;
+}
+
+export const login = (data: AuthRequest) => async (dispatch: AppDispatch) => {
   const response = await fetch(`${HOST}/ru/data/v3/testmethods/docs/login`, {
     method: 'POST',
     headers: {
@@ -25,7 +30,7 @@ export const login = (data:any) => async (dispatch: AppDispatch) => {
 
   dispatch(setUser(true));
   // dispatch(setAlertMessage({
-  //   message: 'DDD',
+  //   message: 'Test',
   //   isVisible: true,
   // }));
 };

@@ -34,10 +34,11 @@ export const Login: FC = () => {
     const formData = new FormData(event.currentTarget);
 
     const data = {
-      login: formData.get('login'),
-      password: formData.get('password'),
+      login: formData.get('login') as string,
+      password: formData.get('password') as string,
     };
     
+    console.log(data)
     dispatch(login(data));
   }
 

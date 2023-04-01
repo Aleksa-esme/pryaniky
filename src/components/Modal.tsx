@@ -9,16 +9,16 @@ import {
   DialogTitle,
   Box
 } from '@mui/material';
-import type { Data } from './Table';
+import { TableResData } from 'controllers/tableController';
 
-// type Obj = {
-//   [key: string] : Data;
-// }
+type Indexed = {
+  [key: string] : string;
+}
 
 type Props = {
   open: boolean;
   title: string;
-  data?: Data;
+  data?: TableResData;
   focusedFiled?: string;
   onClose: () => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
@@ -70,7 +70,7 @@ export const Modal: FC<Props> = ({ open, title, data, focusedFiled, onClose, onS
                 required
                 variant="standard"
                 name={field.name}
-                defaultValue={data && (data as any)[field.name]}
+                defaultValue={data && (data as Indexed)[field.name]}
                 focused={focusedFiled === field.name && true} 
                 sx={{ marginBottom: '10px' }}
               />

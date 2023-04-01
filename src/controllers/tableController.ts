@@ -4,7 +4,7 @@ import { hasApiError } from 'utils';
 
 const HOST = 'https://test.v5.pryaniky.com';
 
-type TableResData = {
+export type TableResData = {
   id: string, 
   companySigDate: string, 
   companySignatureName: string, 
@@ -16,13 +16,13 @@ type TableResData = {
   employeeSignatureName: string,
 }
 type TableReqData = {
-  companySigDate: Date, 
+  companySigDate: Date | string, 
   companySignatureName: FormDataEntryValue, 
   documentName: FormDataEntryValue,
   documentStatus: FormDataEntryValue, 
   documentType: FormDataEntryValue, 
   employeeNumber: FormDataEntryValue, 
-  employeeSigDate: Date, 
+  employeeSigDate: Date | string, 
   employeeSignatureName: FormDataEntryValue,
 }
 
@@ -49,7 +49,7 @@ export const getData = () => async (dispatch: AppDispatch) => {
   dispatch(setLoading(false));
 };
 
-export const sendData = (data: any) => async (dispatch: AppDispatch) => {
+export const sendData = (data: TableReqData) => async (dispatch: AppDispatch) => {
   const response = await fetch(`${HOST}/ru/data/v3/testmethods/docs/userdocs/create`, {
     method: 'POST',
     headers: {
@@ -90,7 +90,7 @@ export const deleteData = (id: string) => async (dispatch: AppDispatch) => {
   dispatch(getData());
 };
 
-export const editData = (id: string, data: any) => async (dispatch: AppDispatch) => {
+export const editData = (id: string, data: TableReqData) => async (dispatch: AppDispatch) => {
   const response = await fetch(`${HOST}/ru/data/v3/testmethods/docs/userdocs/set/${id}`, {
     method: 'POST',
     headers: {

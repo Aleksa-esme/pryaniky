@@ -18,13 +18,13 @@ export const Main: FC = () => {
 
     const data = {
       companySigDate: new Date(),
-      companySignatureName: formData.get('companySignatureName'),
-      documentName: formData.get('documentName'),
-      documentStatus: formData.get('documentStatus'),
-      documentType: formData.get('documentType'),
-      employeeNumber: formData.get('employeeNumber'),
+      companySignatureName: formData.get('companySignatureName') as string,
+      documentName: formData.get('documentName') as string,
+      documentStatus: formData.get('documentStatus') as string,
+      documentType: formData.get('documentType') as string,
+      employeeNumber: formData.get('employeeNumber') as string,
       employeeSigDate: new Date(),
-      employeeSignatureName: formData.get('employeeSignatureName'),
+      employeeSignatureName: formData.get('employeeSignatureName') as string,
     };
 
     dispatch(sendData(data));
