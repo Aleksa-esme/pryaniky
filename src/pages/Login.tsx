@@ -38,7 +38,6 @@ export const Login: FC = () => {
       password: formData.get('password') as string,
     };
     
-    console.log(data)
     dispatch(login(data));
   }
 

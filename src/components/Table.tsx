@@ -2,9 +2,10 @@ import { FC, FormEvent, useEffect, useState } from 'react';
 import { parseISO, format } from "date-fns";
 import { DataGrid, GridCellParams, GridColDef, MuiEvent } from '@mui/x-data-grid';
 import { useAppDispatch, useAppSelector } from 'hooks';
-import { getData, editData, deleteData, TableResData } from 'controllers/tableController';
+import { getData, editData, deleteData } from 'controllers/tableController';
 import { Modal, DeleteButton, Toast } from 'components';
 import { ErrorBoundary } from 'utils';
+import { TableResData } from 'api';
 
 export const Table: FC = () => {
   const dispatch = useAppDispatch();

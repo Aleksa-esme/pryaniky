@@ -27,7 +27,7 @@ export const Toast: FC<Props> = ({ message, isVisible, severity = 'error' }) => 
 
   return (
     <Stack spacing={2} sx={{ width: '100%' }}>
-      <Snackbar open={isVisible} autoHideDuration={6000} onClose={handleClose}>
+      <Snackbar open={isVisible} autoHideDuration={3000} onClose={handleClose}>
         <Alert onClose={handleClose} severity={severity} sx={{ width: '100%' }}>
           {message}
         </Alert>

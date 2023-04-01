@@ -9,7 +9,7 @@ import {
   DialogTitle,
   Box
 } from '@mui/material';
-import { TableResData } from 'controllers/tableController';
+import { TableResData } from 'api';
 
 type Indexed = {
   [key: string] : string;

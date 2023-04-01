@@ -3,5 +3,5 @@ type APIError = {
 };
 
 export function hasApiError(response: any): response is APIError {
-  return response && response.reason;
+  return response && response.error_code;
 }
