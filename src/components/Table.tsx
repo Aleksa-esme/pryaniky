@@ -2,8 +2,8 @@ import { FC, FormEvent, useEffect, useState } from 'react';
 import { parseISO, format } from "date-fns";
 import { DataGrid, GridCallbackDetails, GridCellParams, GridColDef, MuiEvent } from '@mui/x-data-grid';
 import { useAppDispatch, useAppSelector } from 'hooks';
-import { getData, editData } from 'controllers/tableController';
-import { Modal } from 'components';
+import { getData, editData, deleteData } from 'controllers/tableController';
+import { Modal, DeleteButton, Toast } from 'components';
 import { ErrorBoundary } from 'utils';
 
 export type Data = {
@@ -17,30 +17,26 @@ export type Data = {
   employeeSigDate: string,
   employeeSignatureName: string,
 }
-
-const columns: GridColDef[] = [
-  { field: 'companySigDate', headerName: 'Company Sig Date', flex: 1, minWidth: 100, renderCell: params => format(parseISO(params.row.companySigDate), 'dd.MM.yy kk:mm:ss')},
-  { field: 'companySignatureName', headerName: 'Company Signature Name', flex: 1, minWidth: 100},
-  { field: 'documentName', headerName: 'Document Name', flex: 1, minWidth: 100},
-  { field: 'documentStatus', headerName: 'Document Status', flex: 1, minWidth: 100},
-  { field: 'documentType', headerName: 'Document Type', flex: 1, minWidth: 100},
-  { field: 'employeeNumber', headerName: 'Employee Number', flex: 1, minWidth: 100},
-  { field: 'employeeSigDate', headerName: 'Employee Sig Date', flex: 1, minWidth: 100, renderCell: params => format(parseISO(params.row.employeeSigDate), 'dd.MM.yy kk:mm:ss')},
-  { field: 'employeeSignatureName', headerName: 'Employee Signature Name', flex: 1, minWidth: 100},
-];
-   
+  
 export const Table: FC = () => {
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
   const [row, setRow] = useState<Data>();
-  const { tableData, loading } = useAppSelector(state => state.appData);
+  const [focused, setFocused] = useState('');
+
+  const { tableData, loading, alertMessage } = useAppSelector(state => state.appData);
+
+  useEffect(() => {
+    dispatch(getData());
+  }, [dispatch]);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   
-  useEffect(() => {
-    dispatch(getData());
-  }, [dispatch]);
+  const handleDelete = (id: string) => {
+    dispatch(deleteData(id));
+  };
+  
 
   const onEdit = (params: GridCellParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => {
     event.preventDefault();
@@ -56,14 +52,18 @@ export const Table: FC = () => {
       employeeSigDate: params.row.employeeSigDate,
       employeeSignatureName: params.row.employeeSignatureName,
     })
+
+    setFocused(params.field);
+
     handleOpen();
   }
 
-  const handleSend = (event: FormEvent<HTMLFormElement>) => {
+  const handleEdit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     
     const formData = new FormData(event.currentTarget);
 
+    // сделано так, что бы нельзя было изменить дату подписания
     const data = {
       companySigDate: row?.companySigDate,
       companySignatureName: formData.get('companySignatureName'),
@@ -78,6 +78,18 @@ export const Table: FC = () => {
     if(row) dispatch(editData(row.id, data));
     handleClose();
   }
+
+  const columns: GridColDef[] = [
+    { field: 'companySigDate', headerName: 'Company Sig Date', flex: 1, minWidth: 100, renderCell: params => format(parseISO(params.row.companySigDate), 'dd.MM.yy kk:mm:ss')},
+    { field: 'companySignatureName', headerName: 'Company Signature Name', flex: 1, minWidth: 100},
+    { field: 'documentName', headerName: 'Document Name', flex: 1, minWidth: 100},
+    { field: 'documentStatus', headerName: 'Document Status', flex: 1, minWidth: 100},
+    { field: 'documentType', headerName: 'Document Type', flex: 1, minWidth: 100},
+    { field: 'employeeNumber', headerName: 'Employee Number', flex: 1, minWidth: 100},
+    { field: 'employeeSigDate', headerName: 'Employee Sig Date', flex: 1, minWidth: 100, renderCell: params => format(parseISO(params.row.employeeSigDate), 'dd.MM.yy kk:mm:ss')},
+    { field: 'employeeSignatureName', headerName: 'Employee Signature Name', flex: 1, minWidth: 100},
+    { field: 'deleteRow', headerName: '', sortable: false, minWidth: 30, renderCell: params => <div style={{ width: '100%', textAlign: 'center' }}><DeleteButton onClick={() => handleDelete(params.row.id)} /></div> },
+  ];
   
   return (
     <div style={{ height: '74vh', margin: '40px 40px 20px' }}>
@@ -85,24 +97,24 @@ export const Table: FC = () => {
         <DataGrid
           rows={tableData}
           columns={columns}
-          // checkboxSelection
           autoPageSize
           onCellDoubleClick={onEdit}
           loading={loading}
-          // getRowId={(row) => {console.log(row.id); return row.id}}
-          // isCellEditable={(params: GridCellParams) => {/*console.log('params',params);*/ return true}}
-          // isRowSelectable={(params: GridRowParams) => {console.log('params',params); return true}}
         />
       </ErrorBoundary>
       <ErrorBoundary>
         <Modal 
           open={open} 
           onClose={handleClose} 
-          onSubmit={handleSend} 
+          onSubmit={handleEdit} 
           title='Change data in the row' 
           data={row} 
+          focusedFiled={focused}
         />
       </ErrorBoundary>
+      {alertMessage && (
+        <Toast message={alertMessage.message} isVisible={alertMessage.isVisible} />
+      )}
     </div>
   );
 };

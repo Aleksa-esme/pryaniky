@@ -19,6 +19,7 @@ type Props = {
   open: boolean;
   title: string;
   data?: Data;
+  focusedFiled?: string;
   onClose: () => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 };
@@ -52,7 +53,7 @@ const fields = [
 
 const modalRoot = document.querySelector('#modals') as Element;
 
-export const Modal: FC<Props> = ({ open, title, data, onClose, onSubmit }) => {
+export const Modal: FC<Props> = ({ open, title, data, focusedFiled, onClose, onSubmit }) => {
   return (
     <>
     {createPortal(
@@ -70,6 +71,7 @@ export const Modal: FC<Props> = ({ open, title, data, onClose, onSubmit }) => {
                 variant="standard"
                 name={field.name}
                 defaultValue={data && (data as any)[field.name]}
+                focused={focusedFiled === field.name && true} 
                 sx={{ marginBottom: '10px' }}
               />
             ))}

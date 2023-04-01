@@ -1,4 +1,4 @@
-import { setData, setLoading } from 'store/reducers/appSlice';
+import { setData, setLoading, setAlertMessage } from 'store/reducers/appSlice';
 import { AppDispatch } from 'store/store';
 import { hasApiError } from 'utils';
 
@@ -36,6 +36,10 @@ export const getData = () => async (dispatch: AppDispatch) => {
   });
 
   if (hasApiError(response)) {
+    dispatch(setAlertMessage({
+      message: 'Не удалось получить данные',
+      isVisible: true,
+    }));
     throw new Error(response.reason);
   }
 
@@ -56,23 +60,30 @@ export const sendData = (data: any) => async (dispatch: AppDispatch) => {
   });
 
   if (hasApiError(response)) {
+    dispatch(setAlertMessage({
+      message: 'Не удалось отправить данные',
+      isVisible: true,
+    }));
     throw new Error(response.reason);
   }
 
   dispatch(getData());
 };
 
-export const deleteData = (id: number) => async (dispatch: AppDispatch) => {
+export const deleteData = (id: string) => async (dispatch: AppDispatch) => {
   const response = await fetch(`${HOST}/ru/data/v3/testmethods/docs/userdocs/delete/${id}`, {
     method: 'POST',
     headers: {
       'x-auth': 'supersecrettoken_for_user17',
       'Content-Type': 'application/json;charset=utf-8',
     },
-    body: JSON.stringify(id)
   });
 
   if (hasApiError(response)) {
+    dispatch(setAlertMessage({
+      message: 'Не удалось удалить данные',
+      isVisible: true,
+    }));
     throw new Error(response.reason);
   }
 
@@ -90,6 +101,10 @@ export const editData = (id: string, data: any) => async (dispatch: AppDispatch)
   });
 
   if (hasApiError(response)) {
+    dispatch(setAlertMessage({
+      message: 'Не удалось изменить данные',
+      isVisible: true,
+    }));
     throw new Error(response.reason);
   }
 

@@ -52,14 +52,6 @@ export const Main: FC = () => {
         >
           Add data
         </Button>
-        <Button
-          type='submit'
-          variant='contained'
-          sx={{ mt: 1 }}
-          size='large'
-        >
-          Delete data
-        </Button>
       </Container>
       <Footer />
       <Modal open={open} onClose={handleClose} onSubmit={handleSend} title='Add data to the table' />

@@ -18,12 +18,13 @@ import {
   Button, 
   OutlinedInput
 } from '@mui/material';
+import { Toast } from 'components';
 
 export const Login: FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const { loggedIn } = useAppSelector(state => state.appData);
+  const { loggedIn, alertMessage } = useAppSelector(state => state.appData);
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -99,6 +100,9 @@ export const Login: FC = () => {
           </Button>
         </Box>
       </Box>
+      {alertMessage && (
+        <Toast message={alertMessage.message} isVisible={alertMessage.isVisible} />
+      )}
     </Container>
   );
 };
