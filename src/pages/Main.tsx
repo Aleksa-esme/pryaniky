@@ -36,17 +36,15 @@ export const Main: FC = () => {
       <CssBaseline />
       <Header />
       <Table />
-      <Container component='div' sx={{ marginLeft: '20px'}}>
-        <Button
-          type='submit'
-          variant='contained'
-          sx={{ mt: 1, marginRight: '20px' }}
-          size='large'
-          onClick={() => setOpen(true)}
-        >
-          Add data
-        </Button>
-      </Container>
+      <Button
+        type='submit'
+        variant='contained'
+        sx={{ mt: 1, maxWidth: '240px', margin: '20px 40px' }}
+        size='large'
+        onClick={() => setOpen(true)}
+      >
+        Add data
+      </Button>
       <Footer />
       <Modal 
         open={open} 
