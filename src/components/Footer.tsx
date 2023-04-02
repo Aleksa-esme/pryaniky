@@ -9,10 +9,6 @@ export const Footer: FC = () => {
         py: 3,
         mt: 'auto',
         bgcolor: 'primary.main'
-        // backgroundColor: (theme) =>
-        //   theme.palette.mode === 'light'
-        //     ? theme.palette.grey[200]
-        //     : theme.palette.grey[800],
       }}
     >
       <Typography 

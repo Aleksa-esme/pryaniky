@@ -1,4 +1,4 @@
-import { FC, FormEvent, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { parseISO, format } from "date-fns";
 import { DataGrid, GridCellParams, GridColDef, MuiEvent } from '@mui/x-data-grid';
 import { useAppDispatch, useAppSelector } from 'hooks';
@@ -6,12 +6,13 @@ import { getData, editData, deleteData } from 'controllers/tableController';
 import { Modal, DeleteButton, Toast } from 'components';
 import { ErrorBoundary } from 'utils';
 import { TableResData } from 'api';
+import { FieldValues, SubmitHandler } from 'react-hook-form';
 
 export const Table: FC = () => {
   const dispatch = useAppDispatch();
   
   const [open, setOpen] = useState(false);
-  const [row, setRow] = useState<TableResData>();
+  const [row, setRow] = useState<TableResData | null>(null);
   const [focused, setFocused] = useState('');
 
   const { tableData, loading, alertMessage } = useAppSelector(state => state.appData);
@@ -39,34 +40,38 @@ export const Table: FC = () => {
     setOpen(true);
   }
 
-  const handleEdit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    
-    const formData = new FormData(event.currentTarget);
-
+  const handleEdit: SubmitHandler<FieldValues> = ({
+    companySignatureName, documentName, documentStatus, documentType, employeeNumber, employeeSignatureName
+  }) => {
     // сделано так, что бы нельзя было изменить дату подписания
-   if(row) {
-    const data = {
-      companySigDate: row.companySigDate,
-      companySignatureName: formData.get('companySignatureName') as string,
-      documentName: formData.get('documentName') as string,
-      documentStatus: formData.get('documentStatus') as string,
-      documentType: formData.get('documentType') as string,
-      employeeNumber: formData.get('employeeNumber') as string,
-      employeeSigDate: row.employeeSigDate,
-      employeeSignatureName: formData.get('employeeSignatureName') as string,
-    };
-    dispatch(editData(row.id, data));
-   }
+    if(row) {
+      dispatch(editData(row.id, {
+        companySignatureName, 
+        documentName, 
+        documentStatus, 
+        documentType, 
+        employeeNumber, 
+        employeeSignatureName, 
+        companySigDate: row.companySigDate, 
+        employeeSigDate: row.employeeSigDate,
+      }));
+    }
 
-   setOpen(false);
+    setOpen(false);
+    setRow(null);
+  }
+
+  const handleClose = () => {
+    setOpen(false);
+    setRow(null);
+    setFocused('');
   }
 
   const columns: GridColDef[] = [
     { field: 'companySigDate', 
       headerName: 'Company Sig Date', 
       flex: 1, 
-      minWidth: 100, 
+      minWidth: 130, 
       renderCell: params => format(parseISO(params.row.companySigDate), 'dd.MM.yy kk:mm:ss')
     },
     { field: 'companySignatureName', headerName: 'Company Signature Name', flex: 1, minWidth: 100},
@@ -77,7 +82,7 @@ export const Table: FC = () => {
     { field: 'employeeSigDate', 
       headerName: 'Employee Sig Date', 
       flex: 1, 
-      minWidth: 100, 
+      minWidth: 130, 
       renderCell: params => format(parseISO(params.row.employeeSigDate), 'dd.MM.yy kk:mm:ss')
     },
     { field: 'employeeSignatureName', headerName: 'Employee Signature Name', flex: 1, minWidth: 100},
@@ -106,7 +111,7 @@ export const Table: FC = () => {
       <ErrorBoundary>
         <Modal 
           open={open} 
-          onClose={() => setOpen(false)} 
+          onClose={handleClose} 
           onSubmit={handleEdit} 
           title='Change data in the row' 
           data={row} 

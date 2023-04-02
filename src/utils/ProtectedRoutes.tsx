@@ -1,11 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { RouterPaths } from 'App';
-import { useAppSelector } from 'hooks';
-
-const useAuth = () => {
-  const { loggedIn } = useAppSelector(state => state.appData);
-  return loggedIn;
-};
+import { useAuth } from 'hooks';
 
 export const ProtectedRoutes = () => {
   const isAuth = useAuth();

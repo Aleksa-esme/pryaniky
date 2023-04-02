@@ -3,7 +3,7 @@ import { AppDispatch } from 'store/store';
 import { hasApiError } from 'utils/hasApiError';
 import { authApi, AuthReq } from 'api';
 
-export const login = (data: AuthReq) => async (dispatch: AppDispatch) => {
+export const signIn = (data: AuthReq) => async (dispatch: AppDispatch) => {
   const response = await authApi.login(data);
   
   if (hasApiError(response)) {
@@ -23,7 +23,7 @@ export const login = (data: AuthReq) => async (dispatch: AppDispatch) => {
   dispatch(setUser(true));
 };
 
-export const logout = () => async (dispatch: AppDispatch) => {
+export const signOut = () => async (dispatch: AppDispatch) => {
   localStorage.removeItem('tokenJWT');
   
   dispatch(setUser(false));

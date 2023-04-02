@@ -13,7 +13,7 @@ import {
   Box
 } from '@mui/material';
 import { useAppDispatch } from 'hooks';
-import { logout } from 'controllers/userController';
+import { signOut } from 'controllers/userController';
 
 export const Header: FC = () => {
   const dispatch = useAppDispatch();
@@ -31,7 +31,7 @@ export const Header: FC = () => {
 
   const handleLogout = () => {
     setAnchorEl(null);
-    dispatch(logout());
+    dispatch(signOut());
   };
   
   return (

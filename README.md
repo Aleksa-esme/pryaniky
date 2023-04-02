@@ -8,15 +8,17 @@
 - Удаление данных из таблицы
 - API запросы
 - Роутинг
+- Валидация форм
 
 ### Технологии
 - Typescript 
 - React
-- Redux
 - React Router
+- React hook form
+- Redux
 - Material UI
 
 ### Установка
 - `npm i` - установка зависимостей
-- `npm start` - запуск в dev режиме
+- `npm run start` - запуск в dev режиме
 - `npm run build` - запуск production сборки

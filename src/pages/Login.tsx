@@ -1,7 +1,8 @@
-import { FC, FormEvent, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from 'hooks';
-import { login } from 'controllers/userController';
+import { signIn } from 'controllers/userController';
 import { RouterPaths } from 'App';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Visibility from '@mui/icons-material/Visibility';
@@ -16,9 +17,11 @@ import {
   Box, 
   CssBaseline, 
   Button, 
-  OutlinedInput
+  OutlinedInput,
+  FormHelperText
 } from '@mui/material';
 import { Toast } from 'components';
+import { validatePassword, validateLogin } from 'utils';
 
 export const Login: FC = () => {
   const dispatch = useAppDispatch();
@@ -28,17 +31,12 @@ export const Login: FC = () => {
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    
-    const formData = new FormData(event.currentTarget);
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    mode: 'onBlur',
+  });
 
-    const data = {
-      login: formData.get('login') as string,
-      password: formData.get('password') as string,
-    };
-    
-    dispatch(login(data));
+  const onSubmit: SubmitHandler<FieldValues> = ({ login, password }) => {
+    dispatch(signIn({ login, password }));
   }
 
   useEffect(() => {
@@ -62,22 +60,34 @@ export const Login: FC = () => {
         <Typography component='h1' variant='h5'>
           Sign in
         </Typography>
-        <Box component='form' sx={{ mt: 1 }} onSubmit={handleSubmit}>
+        <Box component='form' sx={{ mt: 1 }} onSubmit={handleSubmit(onSubmit)}>
           <InputLabel htmlFor='login'>Username</InputLabel>
           <OutlinedInput
             id='login'
             type='text'
-            required
             fullWidth
-            name='login'
+            {...register('login', {
+              required: 'Required field',
+              validate: validateLogin,
+            })}
+            error={!!errors.login}
           />
-          <InputLabel sx={{ mt: 1 }} htmlFor='password'>Password</InputLabel>
+          {!!errors.login && (
+            <FormHelperText error sx={{ position: 'absolute' }}>
+              {errors.login.message as string}
+            </FormHelperText>
+          )}
+          
+          <InputLabel sx={{ mt: 2 }} htmlFor='password'>Password</InputLabel>
           <OutlinedInput
             id='password'
             type={showPassword ? 'text' : 'password'}
-            required
             fullWidth
-            name='password'
+            {...register('password', {
+              required: 'Required field',
+              validate: validatePassword,
+            })}
+            error={!!errors.password}
             endAdornment={
               <InputAdornment position='end'>
                 <IconButton
@@ -89,11 +99,17 @@ export const Login: FC = () => {
               </InputAdornment>
             }
           />
+          {!!errors.password && (
+            <FormHelperText error sx={{ position: 'absolute' }}>
+              {errors.password.message as string}
+            </FormHelperText>
+          )}
+          
           <Button
             type='submit'
             fullWidth
             variant='contained'
-            sx={{ mt: 3 }}
+            sx={{ mt: 4 }}
             size='large'
           >
             Sign In
