@@ -98,7 +98,7 @@ export const Table: FC = () => {
   ];
   
   return (
-    <div style={{ height: '74vh', margin: '40px 40px 20px' }}>
+    <div style={{ height: '600px', margin: '40px 40px 20px' }}>
       <ErrorBoundary>
         <DataGrid
           rows={tableData}
@@ -106,6 +106,7 @@ export const Table: FC = () => {
           autoPageSize
           onCellDoubleClick={onEdit}
           loading={loading}
+          getRowHeight={() => 'auto'}
         />
       </ErrorBoundary>
       <ErrorBoundary>
