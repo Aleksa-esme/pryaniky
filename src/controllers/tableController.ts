@@ -10,7 +10,7 @@ export const getData = () => async (dispatch: AppDispatch) => {
 
   if (hasApiError(response)) {
     dispatch(setAlertMessage({
-      message: 'Не удалось получить данные',
+      message: 'Failed to get data',
       isVisible: true,
     }));
     
@@ -26,7 +26,7 @@ export const sendData = (data: TableReqData) => async (dispatch: AppDispatch) =>
 
   if (hasApiError(response)) {
     dispatch(setAlertMessage({
-      message: 'Не удалось отправить данные',
+      message: 'Failed to send data',
       isVisible: true,
     }));
     
@@ -41,7 +41,7 @@ export const deleteData = (id: string) => async (dispatch: AppDispatch) => {
 
   if (hasApiError(response)) {
     dispatch(setAlertMessage({
-      message: 'Не удалось удалить данные',
+      message: 'Failed to delete data',
       isVisible: true,
     }));
     
@@ -56,7 +56,7 @@ export const editData = (id: string, data: TableReqData) => async (dispatch: App
 
   if (hasApiError(response)) {
     dispatch(setAlertMessage({
-      message: 'Не удалось изменить данные',
+      message: 'Failed to edit data',
       isVisible: true,
     }));
     throw new Error(response.reason);

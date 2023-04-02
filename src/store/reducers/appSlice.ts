@@ -1,4 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { checkTokenValid } from 'utils/checkToken';
+
+const token = localStorage.getItem('tokenJWT');
+
+const isValid = (token: string | null) => {
+  return token ? checkTokenValid(token) : false
+}
 
 type Alert = {
   message: string | null;
@@ -14,7 +21,7 @@ type State = {
 
 const initialState: State = {
   tableData: [],
-  loggedIn: false,
+  loggedIn: isValid(token) ? true : false,
   loading: false,
   alertMessage: null,
 };

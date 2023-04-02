@@ -1,7 +1,6 @@
 import { BaseApi, APIError } from './baseApi';
 import { TableReqData } from 'api';
-
-const header = { 'x-auth': 'supersecrettoken_for_user17' };
+import { getTokenValue } from 'utils';
 
 export class DataApi extends BaseApi {
   constructor() {
@@ -10,27 +9,35 @@ export class DataApi extends BaseApi {
 
   get() {
     return this.http.get<void | APIError>('/get', {
-      headers: header,
+      headers: {
+        'x-auth': getTokenValue(localStorage.getItem('tokenJWT') as string)
+      },
     });
   }
 
   send(payload: TableReqData) {
     return this.http.post<void | APIError>('/create', {
       data: payload,
-      headers: header,
+      headers: {
+        'x-auth': getTokenValue(localStorage.getItem('tokenJWT') as string)
+      },
     });
   }
 
   edit(id: string, payload: TableReqData) {
     return this.http.post<void | APIError>(`/set/${id}`, {
       data: payload,
-      headers: header,
+      headers: {
+        'x-auth': getTokenValue(localStorage.getItem('tokenJWT') as string)
+      },
     });
   }
 
   delete(id: string) {
     return this.http.post<void | APIError>(`/delete/${id}`, {
-      headers: header,
+      headers: {
+        'x-auth': getTokenValue(localStorage.getItem('tokenJWT') as string)
+      },
     });
   }
 }

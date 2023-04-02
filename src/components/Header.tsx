@@ -12,18 +12,26 @@ import {
   ListItemIcon,
   Box
 } from '@mui/material';
+import { useAppDispatch } from 'hooks';
+import { logout } from 'controllers/userController';
 
 export const Header: FC = () => {
+  const dispatch = useAppDispatch();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   
   const open = Boolean(anchorEl);
   
-  const handleClick = (event: MouseEvent<HTMLElement>) => {
+  const handleOpen = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
   
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    setAnchorEl(null);
+    dispatch(logout());
   };
   
   return (
@@ -32,10 +40,10 @@ export const Header: FC = () => {
         <Typography variant='h5'>
           Pryaniky
         </Typography>
-        <Box>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Tooltip title="Account settings">
             <IconButton
-              onClick={handleClick}
+              onClick={handleOpen}
               size="small"
               sx={{ ml: 2 }}
               aria-controls={open ? 'account-menu' : undefined}
@@ -54,7 +62,7 @@ export const Header: FC = () => {
             transformOrigin={{ horizontal: 'right', vertical: 'top' }}
             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
           >
-            <MenuItem onClick={handleClose}>
+            <MenuItem onClick={handleLogout}>
               <ListItemIcon>
                 <Logout fontSize="small" />
               </ListItemIcon>

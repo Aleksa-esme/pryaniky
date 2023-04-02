@@ -6,16 +6,25 @@ import { authApi, AuthReq } from 'api';
 export const login = (data: AuthReq) => async (dispatch: AppDispatch) => {
   const response = await authApi.login(data);
   
-  console.log(data)
-  console.log(response)
-
   if (hasApiError(response)) {
     dispatch(setAlertMessage({
-      message: 'Не верный логин или пароль',
+      message: 'Invalid username or password',
       isVisible: true,
     }));
+    
     throw new Error(response.reason);
   }
 
+  // текущее время + 3 дня в миллисекундах
+  const token = {value: `${response.data.token}${data.login}`, timestamp: Date.now() + 259200000};
+
+  localStorage.setItem('tokenJWT', JSON.stringify(token));
+
   dispatch(setUser(true));
+};
+
+export const logout = () => async (dispatch: AppDispatch) => {
+  localStorage.removeItem('tokenJWT');
+  
+  dispatch(setUser(false));
 };
